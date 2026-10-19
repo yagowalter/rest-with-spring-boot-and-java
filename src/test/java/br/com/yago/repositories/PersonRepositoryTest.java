@@ -161,4 +161,30 @@ public class PersonRepositoryTest {
         // Then / Assert
         assertTrue(personOptional.isEmpty());
     }
+
+    @DisplayName("Given First Name And Last Name When Find By JQPL Then Return Person Object")
+    @Test
+    void testGivenFirstNameAndLastName_whenFindByJPQL_ThenReturnPersonObject() {
+
+        // Given / Arrange
+        Person person0 = new Person(
+                "Costa",
+                "leandro@gmail.com",
+                "Male",
+                "Uberlândia - Minas Gerais - Brasil",
+                "Leandro"
+        );
+        repository.save(person0);
+
+        String firstName = "Leandro";
+        String lastName = "Costa";
+
+        // When / Act
+        Person savedPerson = repository.findByJPQL(firstName, lastName);
+
+        // Then / Assert
+        assertNotNull(savedPerson);
+        assertEquals(firstName, savedPerson.getFirstName());
+        assertEquals(lastName, savedPerson.getLastName());
+    }
 }

@@ -1,5 +1,6 @@
 package br.com.yago.controllers;
 
+import java.util.List;
 import br.com.yago.model.Person;
 import br.com.yago.services.PersonServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,11 @@ public class PersonController {
             @PathVariable(value = "id") String id) throws Exception {
 
         return service.findById(id);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Person> findAll(){
+        return service.findAll();
     }
 
 }

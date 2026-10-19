@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,7 +42,7 @@ class PersonServicesTest {
 
     @DisplayName("Given Person Object When Save Person Then Return Person Object")
     @Test
-    void testGiverPersonObject_WhenSavePerson_ThenReturnPersonObject() {
+    void testGivenPersonObject_WhenSavePerson_ThenReturnPersonObject() {
 
         // Given / Arrange
         given(repository.findByEmail(anyString())).willReturn(Optional.empty());
@@ -57,7 +58,7 @@ class PersonServicesTest {
 
     @DisplayName("Given Existing Email Then Throws Exception")
     @Test
-    void testGiverExistingEmail_WhenSavePerson_ThenThrowsException() {
+    void testGivenExistingEmail_WhenSavePerson_ThenThrowsException() {
 
         // Given / Arrange
         given(repository.findByEmail(anyString())).willReturn(Optional.of(person0));
@@ -69,5 +70,28 @@ class PersonServicesTest {
 
         // Then / Assert
         verify(repository, never()).save(any(Person.class));
+    }
+
+    @DisplayName("Given Persons List When Find All Persons Then Return Persons List")
+    @Test
+    void testGivenPersonsList_WhenFindAllPersons_ThenReturnPersonsList() {
+
+        // Given / Arrange
+        Person person1 = new Person(
+                "Costa",
+                "Leonardo@gmail.com",
+                "Male",
+                "Uberlândia - Minas Gerais - Brasil",
+                "Leonardo"
+        );
+
+        given(repository.findAll()).willReturn(List.of(person0, person1));
+
+        // When / Act
+        List<Person> personsList = services.findAll();
+
+        // Then / Assert
+        assertNotNull(personsList);
+        assertEquals(2, personsList.size());
     }
 }

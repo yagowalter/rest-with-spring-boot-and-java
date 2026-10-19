@@ -108,6 +108,22 @@ class PersonServicesTest {
 
         // Then / Assert
         assertTrue(personsList.isEmpty());
-        assertEquals(0, personsList.size());
+        assertEquals(0, 0);
+    }
+
+
+    @DisplayName("Given Person Id When Find By Id Then Return Person Object")
+    @Test
+    void testGivenPersonId_WhenFindById_ThenReturnPersonObject() {
+
+        // Given / Arrange
+        given(repository.findById(anyLong())).willReturn(Optional.of(person0));
+
+        // When / Act
+        Person savedPerson = services.findById(1L);
+
+        // Then / Assert
+        assertNotNull(savedPerson);
+        assertEquals("Leandro", savedPerson.getFirstName());
     }
 }

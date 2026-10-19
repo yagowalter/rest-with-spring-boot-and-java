@@ -1,5 +1,6 @@
 package br.com.yago.services;
 
+import br.com.yago.exceptions.ResourceNotFoundException;
 import br.com.yago.model.Person;
 import br.com.yago.repositories.PersonRepository;
 import org.junit.jupiter.api.*;
@@ -10,8 +11,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PersonServicesTest {
@@ -51,5 +53,21 @@ class PersonServicesTest {
         // Then / Assert
         assertNotNull(savedPerson);
         assertEquals("Leandro", savedPerson.getFirstName());
+    }
+
+    @DisplayName("Given Existing Email Then Throws Exception")
+    @Test
+    void testGiverExistingEmail_WhenSavePerson_ThenThrowsException() {
+
+        // Given / Arrange
+        given(repository.findByEmail(anyString())).willReturn(Optional.of(person0));
+
+        // When / Act
+        assertThrows(ResourceNotFoundException.class, () -> {
+            services.create(person0);
+        });
+
+        // Then / Assert
+        verify(repository, never()).save(any(Person.class));
     }
 }

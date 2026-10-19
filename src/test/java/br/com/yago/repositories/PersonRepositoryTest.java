@@ -16,7 +16,6 @@ public class PersonRepositoryTest {
     @Autowired
     private PersonRepository repository;
 
-
     @DisplayName("Given Person Object When Save Then Return Saved Person")
     @Test
     void testGivenPersonObject_whenSave_ThenReturnSavedPerson() {
@@ -66,5 +65,27 @@ public class PersonRepositoryTest {
         // Then / Assert
         assertNotNull(repository);
         assertEquals(2, personList.size());
+    }
+
+    @DisplayName("Given Person Object When Find By Id Then Return Person Object")
+    @Test
+    void testGivenPersonObject_whenFindById_ThenReturnPersonObject() {
+
+        // Given / Arrange
+        Person person0 = new Person(
+                "Costa",
+                "leandro@gmail.com",
+                "Male",
+                "Uberlândia - Minas Gerais - Brasil",
+                "Leandro"
+        );
+        repository.save(person0);
+
+        // When / Act
+        Person savedPerson = repository.findById(person0.getId()).get();
+
+        // Then / Assert
+        assertNotNull(savedPerson);
+        assertEquals(savedPerson.getId(), savedPerson.getId());
     }
 }

@@ -214,7 +214,7 @@ public class PersonRepositoryTest {
         assertEquals(lastName, savedPerson.getLastName());
     }
 
-    @DisplayName("Given First Name And Last Name When Find By Native SQL Named Parameters Then Return Person Object")
+    @DisplayName("Given First Name And Last Name When Find By Native SQL Then Return Person Object")
     @Test
     void testGivenFirstNameAndLastName_whenFindByJPQLNativeSQL_ThenReturnPersonObject() {
 
@@ -233,6 +233,32 @@ public class PersonRepositoryTest {
 
         // When / Act
         Person savedPerson = repository.findByNativeSQL(firstName, lastName);
+
+        // Then / Assert
+        assertNotNull(savedPerson);
+        assertEquals(firstName, savedPerson.getFirstName());
+        assertEquals(lastName, savedPerson.getLastName());
+    }
+
+    @DisplayName("Given First Name And Last Name When Find By Native SQL With Named Parameters Then Return Person Object")
+    @Test
+    void testGivenFirstNameAndLastName_whenFindByJPQLCNativeSQLWithNamedParameters_ThenReturnPersonObject() {
+
+        // Given / Arrange
+        Person person0 = new Person(
+                "Costa",
+                "leandro@gmail.com",
+                "Male",
+                "Uberlândia - Minas Gerais - Brasil",
+                "Leandro"
+        );
+        repository.save(person0);
+
+        String firstName = "Leandro";
+        String lastName = "Costa";
+
+        // When / Act
+        Person savedPerson = repository.findByNativeSQLWithNamedParameters(firstName, lastName);
 
         // Then / Assert
         assertNotNull(savedPerson);

@@ -111,7 +111,6 @@ class PersonServicesTest {
         assertEquals(0, 0);
     }
 
-
     @DisplayName("Given Person Id When Find By Id Then Return Person Object")
     @Test
     void testGivenPersonId_WhenFindById_ThenReturnPersonObject() {
@@ -125,5 +124,27 @@ class PersonServicesTest {
         // Then / Assert
         assertNotNull(savedPerson);
         assertEquals("Leandro", savedPerson.getFirstName());
+    }
+
+    @DisplayName("Given Person Object When Update Person Then Return Updated Person Object")
+    @Test
+    void testGivenPersonObject_WhenUpdatePerson_ThenReturnUpdatedPersonObject() {
+
+        // Given / Arrange
+        person0.setId(1L);
+        given(repository.findById(anyLong())).willReturn(Optional.of(person0));
+
+        person0.setEmail("leonardo@gmail.com");
+        person0.setFirstName("Leonardo");
+
+        given(repository.save(person0)).willReturn(person0);
+
+        // When / Act
+        Person updatedPerson = services.update(person0);
+
+        // Then / Assert
+        assertNotNull(updatedPerson);
+        assertEquals("Leonardo", updatedPerson.getFirstName());
+        assertEquals("leonardo@gmail.com", updatedPerson.getEmail());
     }
 }

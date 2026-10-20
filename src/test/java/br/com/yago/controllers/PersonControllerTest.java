@@ -93,4 +93,23 @@ public class PersonControllerTest {
                 .andDo(print())
                 .andExpect(jsonPath("$.size()", is(persons.size())));
     }
+
+    @DisplayName("Given Person Id When Find By Id Then Return Person Object")
+    @Test
+    void testGivenPersonId_WhenFindById_ThenReturnPersonObject() throws Exception {
+
+        // Given / Arrange
+        long personId = 1L;
+        given(service.findById(personId)).willReturn(person);
+
+        // When / Act
+        ResultActions response = mockMvc.perform(get("/person/{id}", personId));
+
+        // Then / Assert
+        response.andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.firstName", is(person.getFirstName())))
+                .andExpect(jsonPath("$.lastName", is(person.getLastName())))
+                .andExpect(jsonPath("$.email", is(person.getEmail())));
+    }
 }

@@ -11,12 +11,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.*;
 import org.springframework.test.web.servlet.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 
 
 @WebMvcTest(PersonController.class)
@@ -64,5 +67,30 @@ public class PersonControllerTest {
                 .andExpect(jsonPath("$.firstName", is(person.getFirstName())))
                 .andExpect(jsonPath("$.lastName", is(person.getLastName())))
                 .andExpect(jsonPath("$.email", is(person.getEmail())));
+    }
+
+    @DisplayName("Given List of Persons Object When Find all Persons then Return Persons List")
+    @Test
+    void testGivenListOfPersonsObject_WhenFindAllPersons_ThenReturnPersonsList() throws Exception {
+
+        // Given / Arrange
+        List<Person> persons = new ArrayList<>();
+        persons.add(person);
+        persons.add(new Person(
+                "Costa",
+                "leonardo@gmail.com",
+                "Male",
+                "Uberlândia - Minas Gerais - Brasil",
+                "Leonardo"
+        ));
+        given(service.findAll()).willReturn(persons);
+
+        // When / Act
+        ResultActions response = mockMvc.perform(get("/person"));
+
+        // Then / Assert
+        response.andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.size()", is(persons.size())));
     }
 }

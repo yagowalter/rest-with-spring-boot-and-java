@@ -1,5 +1,6 @@
 package br.com.yago.controllers;
 
+import br.com.yago.exceptions.ResourceNotFoundException;
 import br.com.yago.model.Person;
 import br.com.yago.services.PersonServices;
 import com.fasterxml.jackson.databind.*;
@@ -111,5 +112,21 @@ public class PersonControllerTest {
                 .andExpect(jsonPath("$.firstName", is(person.getFirstName())))
                 .andExpect(jsonPath("$.lastName", is(person.getLastName())))
                 .andExpect(jsonPath("$.email", is(person.getEmail())));
+    }
+
+    @DisplayName("Given Invalid Person Id When Find By Id Then Return Not Found")
+    @Test
+    void testGivenInvalidPersonId_WhenFindById_ThenReturnNotFound() throws Exception {
+
+        // Given / Arrange
+        long personId = 1L;
+        given(service.findById(personId)).willThrow(ResourceNotFoundException.class);
+
+        // When / Act
+        ResultActions response = mockMvc.perform(get("/person/{id}", personId));
+
+        // Then / Assert
+        response.andExpect(status().isNotFound())
+                .andDo(print());
     }
 }

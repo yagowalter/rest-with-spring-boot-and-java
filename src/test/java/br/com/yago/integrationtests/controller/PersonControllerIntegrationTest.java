@@ -14,6 +14,8 @@ import org.testcontainers.shaded.com.fasterxml.jackson.databind.DeserializationF
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.*;
@@ -158,5 +160,73 @@ class PersonControllerIntegrationTest extends AbstractIntegrationTest {
         assertEquals("Uberlândia - Minas Gerais - Brasil", foundPerson.getAddress());
         assertEquals("Male", foundPerson.getGender());
         assertEquals("leonardo@gmail.com", foundPerson.getEmail());
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("integrationTest_GivenPersonObject_when_FindAll_ShouldReturnAPersonsList")
+    void integrationTest_GivenPersonObject_when_FindAll_ShouldReturnAPersonsList() throws IOException {
+
+        Person anotherPerson = new Person(
+                "Rodriguez",
+                "gab@gmail.com",
+                "Female",
+                "Uberlândia - Minas Gerais - Brasil",
+                "Gabriela"
+        );
+
+        given().spec(specification)
+                .contentType(TestConfig.CONTENT_TYPE_JSON)
+                .body(anotherPerson)
+                .when()
+                .post()
+                .then()
+                .statusCode(200);
+
+        var content = given().spec(specification)
+                .when()
+                .get()
+                .then()
+                .statusCode(200)
+                .extract()
+                .body()
+                .asString();
+
+        Person[] myArray = objectMapper.readValue(content, Person[].class);
+        List<Person> people = Arrays.asList(myArray);
+
+        Person foundPersonOne = people.get(0);
+        assertNotNull(foundPersonOne);
+
+        assertNotNull(foundPersonOne.getId());
+        assertNotNull(foundPersonOne.getFirstName());
+        assertNotNull(foundPersonOne.getLastName());
+        assertNotNull(foundPersonOne.getAddress());
+        assertNotNull(foundPersonOne.getGender());
+        assertNotNull(foundPersonOne.getEmail());
+
+        assertTrue(foundPersonOne.getId() > 0);
+        assertEquals("Leonardo", foundPersonOne.getFirstName());
+        assertEquals("Costa", foundPersonOne.getLastName());
+        assertEquals("Uberlândia - Minas Gerais - Brasil", foundPersonOne.getAddress());
+        assertEquals("Male", foundPersonOne.getGender());
+        assertEquals("leonardo@gmail.com", foundPersonOne.getEmail());
+
+        Person foundPersonTwo = people.get(1);
+        assertNotNull(foundPersonTwo);
+
+        assertNotNull(foundPersonTwo.getId());
+        assertNotNull(foundPersonTwo.getFirstName());
+        assertNotNull(foundPersonTwo.getLastName());
+        assertNotNull(foundPersonTwo.getAddress());
+        assertNotNull(foundPersonTwo.getGender());
+        assertNotNull(foundPersonTwo.getEmail());
+
+        assertTrue(foundPersonTwo.getId() > 0);
+        assertEquals("Gabriela", foundPersonTwo.getFirstName());
+        assertEquals("Rodriguez", foundPersonTwo.getLastName());
+        assertEquals("Uberlândia - Minas Gerais - Brasil", foundPersonTwo.getAddress());
+        assertEquals("Female", foundPersonTwo.getGender());
+        assertEquals("gab@gmail.com", foundPersonTwo.getEmail());
     }
 }

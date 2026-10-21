@@ -85,4 +85,43 @@ class PersonControllerIntegrationTest extends AbstractIntegrationTest {
         assertEquals("Male", createdPerson.getGender());
         assertEquals("leandro@gmail.com", createdPerson.getEmail());
     }
+
+    @Test
+    @Order(2)
+    @DisplayName("integrationTest_GivenPersonObject_when_UpdateOnePerson_ShouldReturnAUpdatedPersonObject")
+    void integrationTest_GivenPersonObject_when_UpdateOnePerson_ShouldReturnAUpdatedPersonObject() throws IOException {
+
+        person.setFirstName("Leonardo");
+        person.setEmail("leonardo@gmail.com");
+
+        var content = given().spec(specification)
+                .contentType(TestConfig.CONTENT_TYPE_JSON)
+                .body(person)
+                .when()
+                .put()
+                .then()
+                .statusCode(200)
+                .extract()
+                .body()
+                .asString();
+        Person createdPerson = objectMapper.readValue(content, Person.class);
+
+        person = createdPerson;
+
+        assertNotNull(createdPerson);
+
+        assertNotNull(createdPerson.getId());
+        assertNotNull(createdPerson.getFirstName());
+        assertNotNull(createdPerson.getLastName());
+        assertNotNull(createdPerson.getAddress());
+        assertNotNull(createdPerson.getGender());
+        assertNotNull(createdPerson.getEmail());
+
+        assertTrue(createdPerson.getId() > 0);
+        assertEquals("Leonardo", createdPerson.getFirstName());
+        assertEquals("Costa", createdPerson.getLastName());
+        assertEquals("Uberlândia - Minas Gerais - Brasil", createdPerson.getAddress());
+        assertEquals("Male", createdPerson.getGender());
+        assertEquals("leonardo@gmail.com", createdPerson.getEmail());
+    }
 }

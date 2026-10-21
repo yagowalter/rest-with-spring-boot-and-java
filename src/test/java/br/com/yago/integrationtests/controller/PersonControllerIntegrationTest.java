@@ -229,4 +229,17 @@ class PersonControllerIntegrationTest extends AbstractIntegrationTest {
         assertEquals("Female", foundPersonTwo.getGender());
         assertEquals("gab@gmail.com", foundPersonTwo.getEmail());
     }
+
+    @Test
+    @Order(5)
+    @DisplayName("integrationTest_GivenPersonObject_when_Delete_ShouldReturnNoContent")
+    void integrationTest_GivenPersonObject_when_Delete_ShouldReturnNoContent() throws IOException {
+
+        given().spec(specification)
+                .pathParam("id", person.getId())
+                .when()
+                .delete("{id}")
+                .then()
+                .statusCode(204);
+    }
 }
